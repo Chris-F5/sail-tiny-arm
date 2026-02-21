@@ -1,4 +1,4 @@
-import Out.Sail.Sail
+import Sail
 import Out.Defs
 
 abbrev real := Float

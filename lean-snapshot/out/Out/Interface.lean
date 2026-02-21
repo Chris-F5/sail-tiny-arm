@@ -8,6 +8,7 @@ set_option linter.unusedVariables false
 set_option match.ignoreUnusedAlts true
 
 open Sail
+open ConcurrencyInterfaceV2
 
 namespace Out.Functions
 
@@ -44,33 +45,6 @@ open AccessType
 
 def addr_size' : Nat := 64
 
-def mem_acc_is_explicit (acc : AccessDescriptor) : Bool :=
-  (BEq.beq acc.acctype AccessType_GPR)
-
-def mem_acc_is_ifetch (acc : AccessDescriptor) : Bool :=
-  (BEq.beq acc.acctype AccessType_IFETCH)
-
-def mem_acc_is_ttw (acc : AccessDescriptor) : Bool :=
-  (BEq.beq acc.acctype AccessType_TTW)
-
-def mem_acc_is_relaxed (acc : AccessDescriptor) : Bool :=
-  ((BEq.beq acc.acctype AccessType_GPR) && ((! acc.acqpc) && ((! acc.acqsc) && (! acc.relsc))))
-
-def mem_acc_is_rel_acq_rcpc (acc : AccessDescriptor) : Bool :=
-  ((BEq.beq acc.acctype AccessType_GPR) && acc.acqpc)
-
-def mem_acc_is_rel_acq_rcsc (acc : AccessDescriptor) : Bool :=
-  ((BEq.beq acc.acctype AccessType_GPR) && (acc.acqsc || acc.relsc))
-
-def mem_acc_is_standalone (acc : AccessDescriptor) : Bool :=
-  ((BEq.beq acc.acctype AccessType_GPR) && ((! acc.exclusive) && (! acc.atomicop)))
-
-def mem_acc_is_exclusive (acc : AccessDescriptor) : Bool :=
-  ((BEq.beq acc.acctype AccessType_GPR) && acc.exclusive)
-
-def mem_acc_is_atomic_rmw (acc : AccessDescriptor) : Bool :=
-  ((BEq.beq acc.acctype AccessType_GPR) && acc.atomicop)
-
 def base_AccessDescriptor (acctype : AccessType) : AccessDescriptor :=
   { acctype := acctype
     el := (BitVec.zero 2)
@@ -105,26 +79,26 @@ def base_AccessDescriptor (acctype : AccessType) : AccessDescriptor :=
     tagchecked := false
     tagaccess := false
     mpam := { mpam_sp := PIdSpace_NonSecure
-              partid := (0x0000 : (BitVec 16))
-              pmg := (0x00 : (BitVec 8)) } }
+              partid := 0x0000#16
+              pmg := 0x00#8 } }
 
 def create_writeAccessDescriptor (_ : Unit) : AccessDescriptor :=
   let accdesc := (base_AccessDescriptor AccessType_GPR)
   let accdesc : AccessDescriptor := { accdesc with write := true }
   let accdesc : AccessDescriptor := { accdesc with read := false }
-  { accdesc with el := (0b00 : (BitVec 2)) }
+  { accdesc with el := 0b00#2 }
 
 def create_readAccessDescriptor (_ : Unit) : AccessDescriptor :=
   let accdesc := (base_AccessDescriptor AccessType_GPR)
   let accdesc : AccessDescriptor := { accdesc with read := true }
   let accdesc : AccessDescriptor := { accdesc with write := false }
-  { accdesc with el := (0b00 : (BitVec 2)) }
+  { accdesc with el := 0b00#2 }
 
 def create_iFetchAccessDescriptor (_ : Unit) : AccessDescriptor :=
   let accdesc := (base_AccessDescriptor AccessType_IFETCH)
   let accdesc : AccessDescriptor := { accdesc with read := true }
   let accdesc : AccessDescriptor := { accdesc with write := false }
-  { accdesc with el := (0b00 : (BitVec 2)) }
+  { accdesc with el := 0b00#2 }
 
 def addr_space_def := ()
 

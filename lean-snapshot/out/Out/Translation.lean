@@ -1,6 +1,4 @@
-import Out.Sail.Sail
-import Out.Sail.BitVec
-import Out.Sail.IntRange
+import Sail
 import Out.Defs
 import Out.Specialization
 import Out.FakeReal
@@ -11,6 +9,7 @@ set_option linter.unusedVariables false
 set_option match.ignoreUnusedAlts true
 
 open Sail
+open ConcurrencyInterfaceV2
 
 namespace Out.Functions
 

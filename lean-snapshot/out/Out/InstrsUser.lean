@@ -9,6 +9,7 @@ set_option linter.unusedVariables false
 set_option match.ignoreUnusedAlts true
 
 open Sail
+open ConcurrencyInterfaceV2
 
 namespace Out.Functions
 
@@ -44,42 +45,42 @@ open Barrier
 open AccessType
 
 def decodeLoadStoreRegister (size : (BitVec 2)) (opc : (BitVec 2)) (Rm : (BitVec 5)) (option_v : (BitVec 3)) (S : (BitVec 1)) (Rn : (BitVec 5)) (Rt : (BitVec 5)) : (Option ast) :=
-  let t : reg_index := (BitVec.toNat Rt)
-  let n : reg_index := (BitVec.toNat Rn)
-  let m : reg_index := (BitVec.toNat Rm)
-  if (((option_v != (0b011 : (BitVec 3))) || (S == 1#1)) : Bool)
+  let t : reg_index := (BitVec.toNatInt Rt)
+  let n : reg_index := (BitVec.toNatInt Rn)
+  let m : reg_index := (BitVec.toNatInt Rm)
+  if (((option_v != 0b011#3) || (S == 1#1)) : Bool)
   then none
   else
-    (if ((opc == (0b01 : (BitVec 2))) : Bool)
-    then (some (Load ((BitVec.toNat size), t, n, (OperandReg m))))
+    (if ((opc == 0b01#2) : Bool)
+    then (some (Load ((BitVec.toNatInt size), t, n, (OperandReg m))))
     else
-      (if ((opc == (0b00 : (BitVec 2))) : Bool)
-      then (some (Store ((BitVec.toNat size), t, n, (OperandReg m))))
+      (if ((opc == 0b00#2) : Bool)
+      then (some (Store ((BitVec.toNatInt size), t, n, (OperandReg m))))
       else none))
 
 def decodeLoadStoreImmediate (size : (BitVec 2)) (opc : (BitVec 2)) (imm12 : (BitVec 12)) (Rn : (BitVec 5)) (Rt : (BitVec 5)) : (Option ast) :=
-  let t : reg_index := (BitVec.toNat Rt)
-  let n : reg_index := (BitVec.toNat Rn)
-  if ((opc == (0b01 : (BitVec 2))) : Bool)
-  then (some (Load ((BitVec.toNat size), t, n, (OperandImm imm12))))
+  let t : reg_index := (BitVec.toNatInt Rt)
+  let n : reg_index := (BitVec.toNatInt Rn)
+  if ((opc == 0b01#2) : Bool)
+  then (some (Load ((BitVec.toNatInt size), t, n, (OperandImm imm12))))
   else
-    (if ((opc == (0b00 : (BitVec 2))) : Bool)
-    then (some (Store ((BitVec.toNat size), t, n, (OperandImm imm12))))
+    (if ((opc == 0b00#2) : Bool)
+    then (some (Store ((BitVec.toNatInt size), t, n, (OperandImm imm12))))
     else none)
 
 def decodeExclusiveOr (sf : (BitVec 1)) (shift : (BitVec 2)) (N : (BitVec 1)) (Rm : (BitVec 5)) (imm6 : (BitVec 6)) (Rn : (BitVec 5)) (Rd : (BitVec 5)) : (Option ast) :=
-  let d : reg_index := (BitVec.toNat Rd)
-  let n : reg_index := (BitVec.toNat Rn)
-  let m : reg_index := (BitVec.toNat Rm)
-  if ((imm6 != (0b000000 : (BitVec 6))) : Bool)
+  let d : reg_index := (BitVec.toNatInt Rd)
+  let n : reg_index := (BitVec.toNatInt Rn)
+  let m : reg_index := (BitVec.toNatInt Rm)
+  if ((imm6 != 0b000000#6) : Bool)
   then none
   else (some (ExclusiveOr (sf, d, n, m)))
 
 def decodeAddSubShift (sf : (BitVec 1)) (op : (BitVec 1)) (shift : (BitVec 2)) (imm6 : (BitVec 6)) (Rm : (BitVec 5)) (Rn : (BitVec 5)) (Rd : (BitVec 5)) : (Option ast) :=
-  let d : reg_index := (BitVec.toNat Rd)
-  let n : reg_index := (BitVec.toNat Rn)
-  let m : reg_index := (BitVec.toNat Rm)
-  if ((imm6 != (0b000000 : (BitVec 6))) : Bool)
+  let d : reg_index := (BitVec.toNatInt Rd)
+  let n : reg_index := (BitVec.toNatInt Rn)
+  let m : reg_index := (BitVec.toNatInt Rm)
+  if ((imm6 != 0b000000#6) : Bool)
   then none
   else
     (if ((op == 0#1) : Bool)
@@ -87,54 +88,37 @@ def decodeAddSubShift (sf : (BitVec 1)) (op : (BitVec 1)) (shift : (BitVec 2)) (
     else (some (Sub (sf, d, n, (OperandReg m)))))
 
 def decodeAddSubImm (sf : (BitVec 1)) (op : (BitVec 1)) (sh : (BitVec 1)) (imm12 : (BitVec 12)) (Rn : (BitVec 5)) (Rd : (BitVec 5)) : (Option ast) :=
-  let d : reg_index := (BitVec.toNat Rd)
-  let n : reg_index := (BitVec.toNat Rn)
-  if ((sh != (0b0 : (BitVec 1))) : Bool)
+  let d : reg_index := (BitVec.toNatInt Rd)
+  let n : reg_index := (BitVec.toNatInt Rn)
+  if ((sh != 0#1) : Bool)
   then none
   else
     (if ((op == 0#1) : Bool)
     then (some (Add (sf, d, n, (OperandImm imm12))))
     else (some (Sub (sf, d, n, (OperandImm imm12)))))
 
-/-- Type quantifiers: k_ex10510_ : Bool -/
+/-- Type quantifiers: k_ex15099_ : Bool -/
 def decodeDataBarrier (CRm : (BitVec 4)) (is_sync : Bool) : (Option ast) := ExceptM.run do
   let domain ← (( do
-    let b__3 := (Sail.BitVec.extractLsb CRm 3 2)
-    if ((b__3 == (0b11 : (BitVec 2))) : Bool)
-    then (pure MBReqDomain_FullSystem)
-    else
-      (do
-        if ((b__3 == (0b10 : (BitVec 2))) : Bool)
-        then (pure MBReqDomain_InnerShareable)
-        else
-          (do
-            if ((b__3 == (0b01 : (BitVec 2))) : Bool)
-            then (pure MBReqDomain_Nonshareable)
-            else
-              (do
-                if ((b__3 == (0b00 : (BitVec 2))) : Bool)
-                then (pure MBReqDomain_OuterShareable)
-                else throw (none : (Option ast))))) ) : ExceptM (Option ast) MBReqDomain )
+    match (Sail.BitVec.extractLsb CRm 3 2) with
+    | 0b11 => (pure MBReqDomain_FullSystem)
+    | 0b10 => (pure MBReqDomain_InnerShareable)
+    | 0b01 => (pure MBReqDomain_Nonshareable)
+    | 0b00 => (pure MBReqDomain_OuterShareable)
+    | _ => throw (none : (Option ast)) ) : ExceptM (Option ast) MBReqDomain )
   let types ← (( do
-    let b__0 := (Sail.BitVec.extractLsb CRm 1 0)
-    if ((b__0 == (0b01 : (BitVec 2))) : Bool)
-    then (pure MBReqTypes_Reads)
-    else
-      (do
-        if ((b__0 == (0b10 : (BitVec 2))) : Bool)
-        then (pure MBReqTypes_Writes)
-        else
-          (do
-            if ((b__0 == (0b11 : (BitVec 2))) : Bool)
-            then (pure MBReqTypes_All)
-            else throw (none : (Option ast)))) ) : ExceptM (Option ast) MBReqTypes )
+    match (Sail.BitVec.extractLsb CRm 1 0) with
+    | 0b01 => (pure MBReqTypes_Reads)
+    | 0b10 => (pure MBReqTypes_Writes)
+    | 0b11 => (pure MBReqTypes_All)
+    | _ => throw (none : (Option ast)) ) : ExceptM (Option ast) MBReqTypes )
   if (is_sync : Bool)
   then (pure (some (DataSynchronizationBarrier (domain, types))))
   else (pure (some (DataMemoryBarrier (domain, types))))
 
 def decodeCompareAndBranch (sf : (BitVec 1)) (imm19 : (BitVec 19)) (Rt : (BitVec 5)) : (Option ast) :=
-  let t : reg_index := (BitVec.toNat Rt)
-  let offset : (BitVec 64) := (Sail.BitVec.signExtend (imm19 ++ (0b00 : (BitVec 2))) 64)
+  let t : reg_index := (BitVec.toNatInt Rt)
+  let offset : (BitVec 64) := (Sail.BitVec.signExtend (imm19 ++ 0b00#2) 64)
   (some (CompareAndBranch (sf, t, offset)))
 
 /-- Type quantifiers: n : Nat, d : Nat, 0 ≤ d ∧ d ≤ 31, 0 ≤ n ∧ n ≤ 31 -/
@@ -180,7 +164,7 @@ def execute_Move (sf : (BitVec 1)) (d : Nat) (op : move_operand) : SailM Unit :=
   | .MoveImm data =>
     (do
       let res : (BitVec 64) :=
-        ((Sail.BitVec.zeroExtend data.imm 64) <<< (16 *i (BitVec.toNat data.hw)))
+        ((Sail.BitVec.zeroExtend data.imm 64) <<< (16 *i (BitVec.toNatInt data.hw)))
       (wXS d size (Sail.BitVec.extractLsb res (size -i 1) 0)))
 
 /-- Type quantifiers: n : Nat, t : Nat, size : Nat, 0 ≤ size ∧ size ≤ 3, 0 ≤ t ∧ t ≤ 31, 0
@@ -229,7 +213,7 @@ def execute_CompareAndBranch (sf : (BitVec 1)) (t : Nat) (offset : (BitVec 64)) 
     if ((sf == 1#1) : Bool)
     then (rX t)
     else (pure (Sail.BitVec.zeroExtend (← (rW t)) 64)) ) : SailM (BitVec 64) )
-  if ((operand == (0x0000000000000000 : (BitVec 64))) : Bool)
+  if ((operand == 0x0000000000000000#64) : Bool)
   then
     (do
       let base ← do (rPC ())

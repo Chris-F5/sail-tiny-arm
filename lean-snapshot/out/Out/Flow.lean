@@ -1,6 +1,4 @@
-import Out.Sail.Sail
-import Out.Sail.BitVec
-import Out.Sail.IntRange
+import Sail
 import Out.Defs
 import Out.Specialization
 import Out.FakeReal
@@ -11,6 +9,7 @@ set_option linter.unusedVariables false
 set_option match.ignoreUnusedAlts true
 
 open Sail
+open ConcurrencyInterfaceV2
 
 namespace Out.Functions
 
@@ -45,13 +44,13 @@ open CacheOp
 open Barrier
 open AccessType
 
-/-- Type quantifiers: k_ex9848_ : Bool, k_ex9847_ : Bool -/
+/-- Type quantifiers: k_ex13991_ : Bool, k_ex13990_ : Bool -/
 def neq_bool (x : Bool) (y : Bool) : Bool :=
   (! (x == y))
 
 /-- Type quantifiers: k_n : Nat, y : Nat, k_n ≥ 0 ∧ y ≥ 0 -/
 def eq_bits_int (x : (BitVec k_n)) (y : Nat) : Bool :=
-  ((BitVec.toNat x) == y)
+  ((BitVec.toNatInt x) == y)
 
 /-- Type quantifiers: x : Int -/
 def __id (x : Int) : Int :=

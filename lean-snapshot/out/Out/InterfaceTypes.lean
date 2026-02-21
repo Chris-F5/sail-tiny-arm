@@ -1,6 +1,4 @@
-import Out.Sail.Sail
-import Out.Sail.BitVec
-import Out.Sail.IntRange
+import Sail
 import Out.Defs
 import Out.Specialization
 import Out.FakeReal
@@ -11,6 +9,7 @@ set_option linter.unusedVariables false
 set_option match.ignoreUnusedAlts true
 
 open Sail
+open ConcurrencyInterfaceV2
 
 namespace Out.Functions
 
@@ -82,9 +81,9 @@ def num_of_PARTIDspaceType (arg_ : PARTIDspaceType) : Int :=
   | PIdSpace_NonSecure => 3
 
 def undefined_MPAMinfo (_ : Unit) : SailM MPAMinfo := do
-  (pure { mpam_sp := (← (undefined_PARTIDspaceType ()))
-          partid := (← (undefined_bitvector 16))
-          pmg := (← (undefined_bitvector 8)) })
+  (pure { mpam_sp := ← (undefined_PARTIDspaceType ())
+          partid := ← (undefined_bitvector 16)
+          pmg := ← (undefined_bitvector 8) })
 
 def undefined_AccessType (_ : Unit) : SailM AccessType := do
   (internal_pick
@@ -261,39 +260,39 @@ def num_of_CachePASpace (arg_ : CachePASpace) : Int :=
   | CPAS_Secure => 6
 
 def undefined_AccessDescriptor (_ : Unit) : SailM AccessDescriptor := do
-  (pure { acctype := (← (undefined_AccessType ()))
-          el := (← (undefined_bitvector 2))
-          ss := (← (undefined_SecurityState ()))
-          acqsc := (← (undefined_bool ()))
-          acqpc := (← (undefined_bool ()))
-          relsc := (← (undefined_bool ()))
-          limitedordered := (← (undefined_bool ()))
-          exclusive := (← (undefined_bool ()))
-          atomicop := (← (undefined_bool ()))
-          modop := (← (undefined_MemAtomicOp ()))
-          nontemporal := (← (undefined_bool ()))
-          read := (← (undefined_bool ()))
-          write := (← (undefined_bool ()))
-          cacheop := (← (undefined_CacheOp ()))
-          opscope := (← (undefined_CacheOpScope ()))
-          cachetype := (← (undefined_CacheType ()))
-          pan := (← (undefined_bool ()))
-          transactional := (← (undefined_bool ()))
-          nonfault := (← (undefined_bool ()))
-          firstfault := (← (undefined_bool ()))
-          first := (← (undefined_bool ()))
-          contiguous := (← (undefined_bool ()))
-          streamingsve := (← (undefined_bool ()))
-          ls64 := (← (undefined_bool ()))
-          mops := (← (undefined_bool ()))
-          rcw := (← (undefined_bool ()))
-          rcws := (← (undefined_bool ()))
-          toplevel := (← (undefined_bool ()))
-          varange := (← (undefined_VARange ()))
-          a32lsmd := (← (undefined_bool ()))
-          tagchecked := (← (undefined_bool ()))
-          tagaccess := (← (undefined_bool ()))
-          mpam := (← (undefined_MPAMinfo ())) })
+  (pure { acctype := ← (undefined_AccessType ())
+          el := ← (undefined_bitvector 2)
+          ss := ← (undefined_SecurityState ())
+          acqsc := ← (undefined_bool ())
+          acqpc := ← (undefined_bool ())
+          relsc := ← (undefined_bool ())
+          limitedordered := ← (undefined_bool ())
+          exclusive := ← (undefined_bool ())
+          atomicop := ← (undefined_bool ())
+          modop := ← (undefined_MemAtomicOp ())
+          nontemporal := ← (undefined_bool ())
+          read := ← (undefined_bool ())
+          write := ← (undefined_bool ())
+          cacheop := ← (undefined_CacheOp ())
+          opscope := ← (undefined_CacheOpScope ())
+          cachetype := ← (undefined_CacheType ())
+          pan := ← (undefined_bool ())
+          transactional := ← (undefined_bool ())
+          nonfault := ← (undefined_bool ())
+          firstfault := ← (undefined_bool ())
+          first := ← (undefined_bool ())
+          contiguous := ← (undefined_bool ())
+          streamingsve := ← (undefined_bool ())
+          ls64 := ← (undefined_bool ())
+          mops := ← (undefined_bool ())
+          rcw := ← (undefined_bool ())
+          rcws := ← (undefined_bool ())
+          toplevel := ← (undefined_bool ())
+          varange := ← (undefined_VARange ())
+          a32lsmd := ← (undefined_bool ())
+          tagchecked := ← (undefined_bool ())
+          tagaccess := ← (undefined_bool ())
+          mpam := ← (undefined_MPAMinfo ()) })
 
 def undefined_MemType (_ : Unit) : SailM MemType := do
   (internal_pick [MemType_Normal, MemType_Device])
@@ -328,9 +327,9 @@ def num_of_DeviceType (arg_ : DeviceType) : Int :=
   | DeviceType_nGnRnE => 3
 
 def undefined_MemAttrHints (_ : Unit) : SailM MemAttrHints := do
-  (pure { attrs := (← (undefined_bitvector 2))
-          hints := (← (undefined_bitvector 2))
-          transient := (← (undefined_bool ())) })
+  (pure { attrs := ← (undefined_bitvector 2)
+          hints := ← (undefined_bitvector 2)
+          transient := ← (undefined_bool ()) })
 
 def undefined_Shareability (_ : Unit) : SailM Shareability := do
   (internal_pick [Shareability_NSH, Shareability_ISH, Shareability_OSH])
@@ -365,14 +364,14 @@ def num_of_MemTagType (arg_ : MemTagType) : Int :=
   | MemTag_CanonicallyTagged => 2
 
 def undefined_MemoryAttributes (_ : Unit) : SailM MemoryAttributes := do
-  (pure { memtype := (← (undefined_MemType ()))
-          device := (← (undefined_DeviceType ()))
-          inner := (← (undefined_MemAttrHints ()))
-          outer := (← (undefined_MemAttrHints ()))
-          shareability := (← (undefined_Shareability ()))
-          tags := (← (undefined_MemTagType ()))
-          notagaccess := (← (undefined_bool ()))
-          xs := (← (undefined_bitvector 1)) })
+  (pure { memtype := ← (undefined_MemType ())
+          device := ← (undefined_DeviceType ())
+          inner := ← (undefined_MemAttrHints ())
+          outer := ← (undefined_MemAttrHints ())
+          shareability := ← (undefined_Shareability ())
+          tags := ← (undefined_MemTagType ())
+          notagaccess := ← (undefined_bool ())
+          xs := ← (undefined_bitvector 1) })
 
 def undefined_PASpace (_ : Unit) : SailM PASpace := do
   (internal_pick [PAS_NonSecure, PAS_Secure, PAS_Root, PAS_Realm])
@@ -393,8 +392,8 @@ def num_of_PASpace (arg_ : PASpace) : Int :=
   | PAS_Realm => 3
 
 def undefined_FullAddress (_ : Unit) : SailM FullAddress := do
-  (pure { paspace := (← (undefined_PASpace ()))
-          address := (← (undefined_bitvector 56)) })
+  (pure { paspace := ← (undefined_PASpace ())
+          address := ← (undefined_bitvector 56) })
 
 def undefined_GPCF (_ : Unit) : SailM GPCF := do
   (internal_pick [GPCF_None, GPCF_AddressSize, GPCF_Walk, GPCF_EABT, GPCF_Fail])
@@ -417,8 +416,8 @@ def num_of_GPCF (arg_ : GPCF) : Int :=
   | GPCF_Fail => 4
 
 def undefined_GPCFRecord (_ : Unit) : SailM GPCFRecord := do
-  (pure { gpf := (← (undefined_GPCF ()))
-          level := (← (undefined_int ())) })
+  (pure { gpf := ← (undefined_GPCF ())
+          level := ← (undefined_int ()) })
 
 def undefined_Fault (_ : Unit) : SailM Fault := do
   (internal_pick
@@ -505,26 +504,26 @@ def num_of_ErrorState (arg_ : ErrorState) : Int :=
   | ErrorState_IMPDEF => 6
 
 def undefined_FaultRecord (_ : Unit) : SailM FaultRecord := do
-  (pure { statuscode := (← (undefined_Fault ()))
-          access := (← (undefined_AccessDescriptor ()))
-          ipaddress := (← (undefined_FullAddress ()))
-          gpcf := (← (undefined_GPCFRecord ()))
-          paddress := (← (undefined_FullAddress ()))
-          gpcfs2walk := (← (undefined_bool ()))
-          s2fs1walk := (← (undefined_bool ()))
-          write := (← (undefined_bool ()))
-          s1tagnotdata := (← (undefined_bool ()))
-          tagaccess := (← (undefined_bool ()))
-          level := (← (undefined_int ()))
-          extflag := (← (undefined_bitvector 1))
-          secondstage := (← (undefined_bool ()))
-          assuredonly := (← (undefined_bool ()))
-          toplevel := (← (undefined_bool ()))
-          overlay := (← (undefined_bool ()))
-          dirtybit := (← (undefined_bool ()))
-          domain := (← (undefined_bitvector 4))
-          merrorstate := (← (undefined_ErrorState ()))
-          debugmoe := (← (undefined_bitvector 4)) })
+  (pure { statuscode := ← (undefined_Fault ())
+          access := ← (undefined_AccessDescriptor ())
+          ipaddress := ← (undefined_FullAddress ())
+          gpcf := ← (undefined_GPCFRecord ())
+          paddress := ← (undefined_FullAddress ())
+          gpcfs2walk := ← (undefined_bool ())
+          s2fs1walk := ← (undefined_bool ())
+          write := ← (undefined_bool ())
+          s1tagnotdata := ← (undefined_bool ())
+          tagaccess := ← (undefined_bool ())
+          level := ← (undefined_int ())
+          extflag := ← (undefined_bitvector 1)
+          secondstage := ← (undefined_bool ())
+          assuredonly := ← (undefined_bool ())
+          toplevel := ← (undefined_bool ())
+          overlay := ← (undefined_bool ())
+          dirtybit := ← (undefined_bool ())
+          domain := ← (undefined_bitvector 4)
+          merrorstate := ← (undefined_ErrorState ())
+          debugmoe := ← (undefined_bitvector 4) })
 
 def undefined_MBReqDomain (_ : Unit) : SailM MBReqDomain := do
   (internal_pick
@@ -562,24 +561,24 @@ def num_of_MBReqTypes (arg_ : MBReqTypes) : Int :=
   | MBReqTypes_All => 2
 
 def undefined_CacheRecord (_ : Unit) : SailM CacheRecord := do
-  (pure { acctype := (← (undefined_AccessType ()))
-          cacheop := (← (undefined_CacheOp ()))
-          opscope := (← (undefined_CacheOpScope ()))
-          cachetype := (← (undefined_CacheType ()))
-          regval := (← (undefined_bitvector 64))
-          paddress := (← (undefined_FullAddress ()))
-          vaddress := (← (undefined_bitvector 64))
-          setnum := (← (undefined_int ()))
-          waynum := (← (undefined_int ()))
-          level := (← (undefined_int ()))
-          shareability := (← (undefined_Shareability ()))
-          translated := (← (undefined_bool ()))
-          is_vmid_valid := (← (undefined_bool ()))
-          vmid := (← (undefined_bitvector 16))
-          is_asid_valid := (← (undefined_bool ()))
-          asid := (← (undefined_bitvector 16))
-          security := (← (undefined_SecurityState ()))
-          cpas := (← (undefined_CachePASpace ())) })
+  (pure { acctype := ← (undefined_AccessType ())
+          cacheop := ← (undefined_CacheOp ())
+          opscope := ← (undefined_CacheOpScope ())
+          cachetype := ← (undefined_CacheType ())
+          regval := ← (undefined_bitvector 64)
+          paddress := ← (undefined_FullAddress ())
+          vaddress := ← (undefined_bitvector 64)
+          setnum := ← (undefined_int ())
+          waynum := ← (undefined_int ())
+          level := ← (undefined_int ())
+          shareability := ← (undefined_Shareability ())
+          translated := ← (undefined_bool ())
+          is_vmid_valid := ← (undefined_bool ())
+          vmid := ← (undefined_bitvector 16)
+          is_asid_valid := ← (undefined_bool ())
+          asid := ← (undefined_bitvector 16)
+          security := ← (undefined_SecurityState ())
+          cpas := ← (undefined_CachePASpace ()) })
 
 def undefined_Regime (_ : Unit) : SailM Regime := do
   (internal_pick [Regime_EL3, Regime_EL30, Regime_EL2, Regime_EL20, Regime_EL10])
@@ -618,41 +617,41 @@ def num_of_TGx (arg_ : TGx) : Int :=
   | TGx_64KB => 2
 
 def undefined_TLBContext (_ : Unit) : SailM TLBContext := do
-  (pure { ss := (← (undefined_SecurityState ()))
-          regime := (← (undefined_Regime ()))
-          vmid := (← (undefined_bitvector 16))
-          asid := (← (undefined_bitvector 16))
-          nG := (← (undefined_bitvector 1))
-          ipaspace := (← (undefined_PASpace ()))
-          includes_s1_name := (← (undefined_bool ()))
-          includes_s2_name := (← (undefined_bool ()))
-          includes_gpt_name := (← (undefined_bool ()))
-          ia := (← (undefined_bitvector 64))
-          tg := (← (undefined_TGx ()))
-          cnp := (← (undefined_bitvector 1))
-          level := (← (undefined_int ()))
-          isd128 := (← (undefined_bool ()))
-          xs := (← (undefined_bitvector 1)) })
+  (pure { ss := ← (undefined_SecurityState ())
+          regime := ← (undefined_Regime ())
+          vmid := ← (undefined_bitvector 16)
+          asid := ← (undefined_bitvector 16)
+          nG := ← (undefined_bitvector 1)
+          ipaspace := ← (undefined_PASpace ())
+          includes_s1_name := ← (undefined_bool ())
+          includes_s2_name := ← (undefined_bool ())
+          includes_gpt_name := ← (undefined_bool ())
+          ia := ← (undefined_bitvector 64)
+          tg := ← (undefined_TGx ())
+          cnp := ← (undefined_bitvector 1)
+          level := ← (undefined_int ())
+          isd128 := ← (undefined_bool ())
+          xs := ← (undefined_bitvector 1) })
 
 def undefined_AddressDescriptor (_ : Unit) : SailM AddressDescriptor := do
-  (pure { fault := (← (undefined_FaultRecord ()))
-          memattrs := (← (undefined_MemoryAttributes ()))
-          paddress := (← (undefined_FullAddress ()))
-          tlbcontext := (← (undefined_TLBContext ()))
-          s1assured := (← (undefined_bool ()))
-          s2fs1mro := (← (undefined_bool ()))
-          mecid := (← (undefined_bitvector 16))
-          vaddress := (← (undefined_bitvector 64)) })
+  (pure { fault := ← (undefined_FaultRecord ())
+          memattrs := ← (undefined_MemoryAttributes ())
+          paddress := ← (undefined_FullAddress ())
+          tlbcontext := ← (undefined_TLBContext ())
+          s1assured := ← (undefined_bool ())
+          s2fs1mro := ← (undefined_bool ())
+          mecid := ← (undefined_bitvector 16)
+          vaddress := ← (undefined_bitvector 64) })
 
 def undefined_TranslationStartInfo (_ : Unit) : SailM TranslationStartInfo := do
-  (pure { ss := (← (undefined_SecurityState ()))
-          regime := (← (undefined_Regime ()))
-          vmid := (← (undefined_bitvector 16))
-          asid := (← (undefined_bitvector 16))
-          va := (← (undefined_bitvector 64))
-          cnp := (← (undefined_bitvector 1))
-          accdesc := (← (undefined_AccessDescriptor ()))
-          size := (← (undefined_int ())) })
+  (pure { ss := ← (undefined_SecurityState ())
+          regime := ← (undefined_Regime ())
+          vmid := ← (undefined_bitvector 16)
+          asid := ← (undefined_bitvector 16)
+          va := ← (undefined_bitvector 64)
+          cnp := ← (undefined_bitvector 1)
+          accdesc := ← (undefined_AccessDescriptor ())
+          size := ← (undefined_int ()) })
 
 def undefined_TLBILevel (_ : Unit) : SailM TLBILevel := do
   (internal_pick [TLBILevel_Any, TLBILevel_Last])
@@ -742,28 +741,28 @@ def num_of_TLBIMemAttr (arg_ : TLBIMemAttr) : Int :=
   | TLBI_ExcludeXS => 1
 
 def undefined_TLBIRecord (_ : Unit) : SailM TLBIRecord := do
-  (pure { op := (← (undefined_TLBIOp ()))
-          from_aarch64 := (← (undefined_bool ()))
-          security := (← (undefined_SecurityState ()))
-          regime := (← (undefined_Regime ()))
-          vmid := (← (undefined_bitvector 16))
-          asid := (← (undefined_bitvector 16))
-          level := (← (undefined_TLBILevel ()))
-          attr := (← (undefined_TLBIMemAttr ()))
-          ipaspace := (← (undefined_PASpace ()))
-          address := (← (undefined_bitvector 64))
-          end_address_name := (← (undefined_bitvector 64))
-          d64 := (← (undefined_bool ()))
-          d128 := (← (undefined_bool ()))
-          ttl := (← (undefined_bitvector 4))
-          tg := (← (undefined_bitvector 2)) })
+  (pure { op := ← (undefined_TLBIOp ())
+          from_aarch64 := ← (undefined_bool ())
+          security := ← (undefined_SecurityState ())
+          regime := ← (undefined_Regime ())
+          vmid := ← (undefined_bitvector 16)
+          asid := ← (undefined_bitvector 16)
+          level := ← (undefined_TLBILevel ())
+          attr := ← (undefined_TLBIMemAttr ())
+          ipaspace := ← (undefined_PASpace ())
+          address := ← (undefined_bitvector 64)
+          end_address_name := ← (undefined_bitvector 64)
+          d64 := ← (undefined_bool ())
+          d128 := ← (undefined_bool ())
+          ttl := ← (undefined_bitvector 4)
+          tg := ← (undefined_bitvector 2) })
 
 def undefined_TLBIInfo (_ : Unit) : SailM TLBIInfo := do
-  (pure { rec' := (← (undefined_TLBIRecord ()))
-          shareability := (← (undefined_Shareability ())) })
+  (pure { rec' := ← (undefined_TLBIRecord ())
+          shareability := ← (undefined_Shareability ()) })
 
 def undefined_DxB (_ : Unit) : SailM DxB := do
-  (pure { domain := (← (undefined_MBReqDomain ()))
-          types := (← (undefined_MBReqTypes ()))
-          nXS := (← (undefined_bool ())) })
+  (pure { domain := ← (undefined_MBReqDomain ())
+          types := ← (undefined_MBReqTypes ())
+          nXS := ← (undefined_bool ()) })
 
