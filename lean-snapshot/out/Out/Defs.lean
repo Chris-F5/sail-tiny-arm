@@ -7,7 +7,9 @@ set_option linter.unusedVariables false
 set_option match.ignoreUnusedAlts true
 
 open Sail
-open ConcurrencyInterfaceV2
+
+/- archsem-lean change: We `open ArchSem` instead of `ConcurrencyInterfaceV2` -/
+open ArchSem
 
 abbrev bit := (BitVec 1)
 
@@ -423,12 +425,14 @@ abbrev RegisterType : Register → Type
   | .R30 => (BitVec 64)
   | ._PC => (BitVec 64)
 
-instance : Inhabited (RegisterRef RegisterType (BitVec 64)) where
-  default := .Reg _PC
 abbrev exception := Unit
-
-abbrev SailM := PreSailM RegisterType trivialChoiceSource exception
-abbrev SailME := PreSailME RegisterType trivialChoiceSource exception
+/-
+ - archsem-lean change: RegisterType and choiceSources are
+ - no longer passed to these types. They get the register type
+ - from [Arch] and the choiceSource is no longer relevant in the free monad.
+ -/
+abbrev SailM [Arch] := PreSailM exception
+abbrev SailME [Arch] := PreSailME exception
 
 def mem_acc_is_explicit (acc : AccessDescriptor) : Bool :=
   (BEq.beq acc.acctype AccessType_GPR)
@@ -463,6 +467,11 @@ instance : Arch where
   addr_space := addr_space
   CHERI := false
   cap_size_log := 0
+
+  /- archsem-lean change: Register types are now in the Arch interface. -/
+  register := Register
+  register_type := RegisterType
+
   mem_acc := AccessDescriptor
   mem_acc_is_explicit := mem_acc_is_explicit
   mem_acc_is_ifetch := mem_acc_is_ifetch
@@ -481,3 +490,10 @@ instance : Arch where
   tlbi := Unit
   exn := Unit
   sys_reg_id := Unit
+
+/-
+ - archsem-lean change: this is moved after the Arch definition
+ - since RegisterRef takes an [Arch] param now to get the register types.
+ -/
+instance : Inhabited (RegisterRef (BitVec 64)) where
+  default := .Reg _PC
