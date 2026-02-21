@@ -1,5 +1,15 @@
 {"version": "1.1.0",
  "packagesDir": ".lake/packages",
- "packages": [],
+ "packages":
+ [{"url": "https://github.com/Chris-F5/lean-sail.git",
+   "type": "git",
+   "subDir": null,
+   "scope": "",
+   "rev": "5e94793c4c91427cff3d9607eb601c76f6d374cf",
+   "name": "Sail",
+   "manifestFile": "lake-manifest.json",
+   "inputRev": "archsem-lean",
+   "inherited": false,
+   "configFile": "lakefile.toml"}],
  "name": "out",
  "lakeDir": ".lake"}
