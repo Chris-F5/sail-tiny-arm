@@ -15,17 +15,24 @@ abbrev undefined_bit (_ : Unit) : SailM (BitVec 1) := PreSail.undefined_bit ()
 
 abbrev undefined_bool (_ : Unit) : SailM Bool := PreSail.undefined_bool ()
 
-abbrev undefined_int (_ : Unit) : SailM Int := PreSail.undefined_int ()
+/- archsem-lean change: we no longer support infinite non-determinisim. -/
+-- abbrev undefined_int (_ : Unit) : SailM Int := PreSail.undefined_int ()
 
 abbrev undefined_range (low high : Int) : SailM Int := PreSail.undefined_range low high
 
-abbrev undefined_nat (_ : Unit) : SailM Nat := PreSail.undefined_nat ()
+/- archsem-lean change: we no longer support infinite non-determinisim. -/
+-- abbrev undefined_nat (_ : Unit) : SailM Nat := PreSail.undefined_nat ()
 
-abbrev undefined_string (_ : Unit) : SailM String := PreSail.undefined_string ()
+/- archsem-lean change: we no longer support infinite non-determinisim. -/
+-- abbrev undefined_string (_ : Unit) : SailM String := PreSail.undefined_string ()
 
 abbrev undefined_bitvector (n : Nat) : SailM (BitVec n) := PreSail.undefined_bitvector n
 
-abbrev undefined_vector (n : Nat) (a : α) : SailM (Vector α n) := PreSail.undefined_vector n a
+/-
+ - archsem-lean change: I dont understand what this is for? The current implementation
+ - just returns a vector of `n` `a`'s.
+ -/
+-- abbrev undefined_vector (n : Nat) (a : α) : SailM (Vector α n) := PreSail.undefined_vector n a
 
 abbrev internal_pick {α : Type} : List α → SailM α := PreSail.internal_pick
 
