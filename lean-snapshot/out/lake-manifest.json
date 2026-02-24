@@ -1,11 +1,11 @@
 {"version": "1.1.0",
  "packagesDir": ".lake/packages",
  "packages":
- [{"url": "https://github.com/Chris-F5/lean-sail.git",
+ [{"url": "https://github.com/rems-project/lean-sail.git",
    "type": "git",
    "subDir": null,
    "scope": "",
-   "rev": "1213f52e1f2a30150d77c6f0243a53d4cdfe9a97",
+   "rev": "11204604f33521b46dad4da5f1199dae96de6011",
    "name": "Sail",
    "manifestFile": "lake-manifest.json",
    "inputRev": "archsem-lean",

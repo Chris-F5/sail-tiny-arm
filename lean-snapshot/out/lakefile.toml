@@ -8,5 +8,5 @@ leanOptions.weak.linter.style.nameCheck = false
 
 [[require]]
 name = "Sail"
-git = "https://github.com/Chris-F5/lean-sail.git"
+git = "https://github.com/rems-project/lean-sail.git"
 rev = "archsem-lean"
