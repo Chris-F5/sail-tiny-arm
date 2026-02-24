@@ -15,16 +15,13 @@ abbrev undefined_bit (_ : Unit) : SailM (BitVec 1) := PreSail.undefined_bit ()
 
 abbrev undefined_bool (_ : Unit) : SailM Bool := PreSail.undefined_bool ()
 
-/- archsem-lean change: we no longer support infinite non-determinisim. -/
--- abbrev undefined_int (_ : Unit) : SailM Int := PreSail.undefined_int ()
+abbrev undefined_int (_ : Unit) : SailM Int := throw Error.InfiniteNondeterminisim
 
 abbrev undefined_range (low high : Int) : SailM Int := PreSail.undefined_range low high
 
-/- archsem-lean change: we no longer support infinite non-determinisim. -/
--- abbrev undefined_nat (_ : Unit) : SailM Nat := PreSail.undefined_nat ()
+abbrev undefined_nat (_ : Unit) : SailM Nat := throw Error.InfiniteNondeterminisim
 
-/- archsem-lean change: we no longer support infinite non-determinisim. -/
--- abbrev undefined_string (_ : Unit) : SailM String := PreSail.undefined_string ()
+abbrev undefined_string (_ : Unit) : SailM String := throw Error.InfiniteNondeterminisim
 
 abbrev undefined_bitvector (n : Nat) : SailM (BitVec n) := PreSail.undefined_bitvector n
 
