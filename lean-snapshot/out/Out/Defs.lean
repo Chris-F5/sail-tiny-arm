@@ -1,4 +1,5 @@
 import Sail
+import Sail.ConcurrencyInterfaceV1
 open PreSail
 
 set_option maxHeartbeats 1_000_000_000
@@ -431,8 +432,14 @@ abbrev exception := Unit
  - no longer passed to these types. They get the register type
  - from [Arch] and the choiceSource is no longer relevant in the free monad.
  -/
-abbrev SailM [Arch] := PreSailM exception
-abbrev SailME [Arch] := PreSailME exception
+/-
+ - archsem-lean change: PreSailM{,E} could now be different depending on
+ - the concurrency interface.
+ -/
+abbrev Sail.ConcurrencyInterfaceV1.SailM := ConcurrencyInterfaceV1.PreSailM RegisterType ConcurrencyInterfaceV1.trivialChoiceSource exception
+abbrev Sail.ConcurrencyInterfaceV1.SailME := ConcurrencyInterfaceV1.PreSailME RegisterType ConcurrencyInterfaceV1.trivialChoiceSource exception
+abbrev Sail.ConcurrencyInterfaceV2.SailM [Arch] := ConcurrencyInterfaceV2.PreSailM exception
+abbrev Sail.ConcurrencyInterfaceV2.SailME [Arch] := ConcurrencyInterfaceV2.PreSailME exception
 
 def mem_acc_is_explicit (acc : AccessDescriptor) : Bool :=
   (BEq.beq acc.acctype AccessType_GPR)
@@ -494,6 +501,7 @@ instance : Arch where
 /-
  - archsem-lean change: this is moved after the Arch definition
  - since RegisterRef takes an [Arch] param now to get the register types.
+ - archsem-lean change: Register ref also is not interface-specific.
  -/
-instance : Inhabited (RegisterRef (BitVec 64)) where
+instance : Inhabited (ConcurrencyInterfaceV2.RegisterRef (BitVec 64)) where
   default := .Reg _PC
