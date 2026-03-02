@@ -26,4 +26,4 @@ clean:
 
 lean:
 	-mkdir lean-snapshot
-	sail --lean-output-dir lean-snapshot --lean $(MODEL) --lean-lib-repo "https://github.com/Chris-F5/lean-sail.git" --lean-lib-rev archsem-lean
+	sail --lean-output-dir lean-snapshot --lean $(MODEL) --lean-lib-rev archsem-lean

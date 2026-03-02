@@ -60,4 +60,4 @@ def prerr_real (_ : String) (_ : real) : Unit := ()
 -- val "random_real" : unit -> real
 def random_real (_ : Unit) : real := 34
 
-def undefined_real (_ : Unit) : Sail.ConcurrencyInterfaceV2.SailM real := return default
+def undefined_real (_ : Unit) : SailM real := return default

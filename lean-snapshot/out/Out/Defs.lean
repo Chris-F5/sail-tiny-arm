@@ -1,5 +1,4 @@
 import Sail
-import Sail.ConcurrencyInterfaceV1
 open PreSail
 
 set_option maxHeartbeats 1_000_000_000
@@ -8,8 +7,6 @@ set_option linter.unusedVariables false
 set_option match.ignoreUnusedAlts true
 
 open Sail
-
-/- archsem-lean change: We `open ArchSem` instead of `ConcurrencyInterfaceV2` -/
 open ArchSem
 
 abbrev bit := (BitVec 1)
@@ -426,21 +423,6 @@ abbrev RegisterType : Register → Type
   | .R30 => (BitVec 64)
   | ._PC => (BitVec 64)
 
-abbrev exception := Unit
-/-
- - archsem-lean change: RegisterType and choiceSources are
- - no longer passed to these types. They get the register type
- - from [Arch] and the choiceSource is no longer relevant in the free monad.
- -/
-/-
- - archsem-lean change: PreSailM{,E} could now be different depending on
- - the concurrency interface.
- -/
-abbrev Sail.ConcurrencyInterfaceV1.SailM := ConcurrencyInterfaceV1.PreSailM RegisterType ConcurrencyInterfaceV1.trivialChoiceSource exception
-abbrev Sail.ConcurrencyInterfaceV1.SailME := ConcurrencyInterfaceV1.PreSailME RegisterType ConcurrencyInterfaceV1.trivialChoiceSource exception
-abbrev Sail.ConcurrencyInterfaceV2.SailM [Arch] := ConcurrencyInterfaceV2.PreSailM exception
-abbrev Sail.ConcurrencyInterfaceV2.SailME [Arch] := ConcurrencyInterfaceV2.PreSailME exception
-
 def mem_acc_is_explicit (acc : AccessDescriptor) : Bool :=
   (BEq.beq acc.acctype AccessType_GPR)
 
@@ -470,15 +452,12 @@ def mem_acc_is_atomic_rmw (acc : AccessDescriptor) : Bool :=
 
 @[reducible]
 instance : Arch where
+  register := Register
+  register_type := RegisterType
   addr_size := addr_size
   addr_space := addr_space
   CHERI := false
   cap_size_log := 0
-
-  /- archsem-lean change: Register types are now in the Arch interface. -/
-  register := Register
-  register_type := RegisterType
-
   mem_acc := AccessDescriptor
   mem_acc_is_explicit := mem_acc_is_explicit
   mem_acc_is_ifetch := mem_acc_is_ifetch
@@ -497,11 +476,10 @@ instance : Arch where
   tlbi := Unit
   exn := Unit
   sys_reg_id := Unit
+abbrev exception := Unit
 
-/-
- - archsem-lean change: this is moved after the Arch definition
- - since RegisterRef takes an [Arch] param now to get the register types.
- - archsem-lean change: Register ref also is not interface-specific.
- -/
-instance : Inhabited (ConcurrencyInterfaceV2.RegisterRef (BitVec 64)) where
+abbrev SailM := PreSailM exception
+abbrev SailME := PreSailME exception
+
+instance : Inhabited (PreSail.RegisterRef (BitVec 64)) where
   default := .Reg _PC

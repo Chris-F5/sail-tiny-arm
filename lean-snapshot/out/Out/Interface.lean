@@ -8,7 +8,7 @@ set_option linter.unusedVariables false
 set_option match.ignoreUnusedAlts true
 
 open Sail
-open ConcurrencyInterfaceV2
+open ArchSem
 
 namespace Out.Functions
 
@@ -108,7 +108,6 @@ def read_memory (N : Nat) (addr : (BitVec 64)) (accdesc : AccessDescriptor) : Sa
     { access_kind := accdesc
       address := (Sail.BitVec.truncate addr addr_size')
       address_space := addr_space_def
-      /- archsem-lean change: Mem_request now takes a proof that the fields are correct. -/
       size := N
       num_tag := 0 }
   match (← (sail_mem_read req)) with
@@ -131,7 +130,6 @@ def wMem (N : Nat) (addr : (BitVec 64)) (value : (BitVec (8 * N))) (accdesc : Ac
     { access_kind := accdesc
       address := (Sail.BitVec.truncate addr addr_size')
       address_space := addr_space_def
-      /- archsem-lean change: Mem_request now takes a proof that the fields are correct. -/
       size := N
       num_tag := 0 }
   match (← (sail_mem_write req (to_bytes_le (n := N) value) #v[])) with

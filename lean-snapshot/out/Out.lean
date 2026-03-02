@@ -7,7 +7,7 @@ set_option linter.unusedVariables false
 set_option match.ignoreUnusedAlts true
 
 open Sail
-open ConcurrencyInterfaceV2
+open ArchSem
 
 namespace Out.Functions
 
